@@ -1,0 +1,17 @@
+<taglib>
+    <tlib-version>1.0</tlib-version>
+    <jsp-version>2.0</jsp-version>
+    <short-name>hello</short-name>
+
+    <tag>
+        <name>headerTag</name>
+        <tag-class>task1.tags.header</tag-class>
+        <body-content>scriptless</body-content>
+
+        <attribute>
+            <name>auth</name>
+
+        </attribute>
+
+    </tag>
+</taglib>
