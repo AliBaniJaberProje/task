@@ -1,3 +1,7 @@
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="task1.database.DatabaseDriver" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="task1.model.Employee" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 
@@ -28,14 +32,18 @@
 <%
     String isAuthorized=(String) session.getAttribute("authorized");
     pageContext.setAttribute("isAuthorized",isAuthorized);
+    pageContext.setAttribute("type",session.getAttribute("type"));
+
+
+
 %>
 
 <c:if test="${isAuthorized==null}">
-    <myHeader:headerTag auth="false"  />
+    <myHeader:headerTag auth="false" typeuser="manager" />
 </c:if>
 
 <c:if test="${isAuthorized!=null}">
-    <myHeader:headerTag auth="true"  />
+    <myHeader:headerTag auth="true" typeuser="teamLeader" />
 </c:if>
 
 
@@ -57,6 +65,78 @@
 
 
 <c:if test="${isAuthorized!=null}">
+<%
+    ResultSet resultSet= DatabaseDriver.db_executor("SELECT * FROM `Employees1` WHERE role='manager' ",false);
+    ArrayList<Employee>  employees=new ArrayList<Employee>();
+
+    if(resultSet!=null){
+        while (resultSet.next()){
+
+            employees.add(new Employee(resultSet.getString("email"), resultSet.getString("username"), "","",resultSet.getString("Id")));
+
+        }
+    }
+    for (int i=0;i<employees.toArray().length;i++){
+        System.out.println(employees.get(i).getEmail());
+    }
+
+    pageContext.setAttribute("employees",employees);
+
+%>
+    <div class="row">
+        <div class="col" style="margin-left: 40px">
+
+            <form action="ServletEmployee" method="POST">
+                <div class="form-group">
+                    <label for="email">Employee Email </label>
+                    <input type="text" class="form-control" placeholder="Enter email" id="email" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="username">username:</label>
+                    <input type="text" class="form-control" placeholder="Enter username" id="username" name="username">
+                </div>
+                <label for="email">Employee Type </label>
+                <select name="manager" class="custom-select">
+
+
+                    <c:forEach items="${employees}" var="employe">
+                        <option value="${employe.getId()}" >${employe.getUsername()}</option>
+                    </c:forEach>
+
+                </select>
+                <div class="form-group" style="margin-top: 30px">
+                    <button type="submit" name="submit" class="btn btn-primary">add</button>
+                </div>
+
+            </form>
+        </div>
+        <div class="col">
+            <form action="ServletTaskServlet" method="POST">
+                <div class="form-group">
+                    <label for="taskName">Task Name </label>
+                    <input type="text" class="form-control" placeholder="Enter email" id="taskName">
+                </div>
+                <label for="email">Employee Name </label>
+                <select name="employee" class="custom-select">
+
+                    <option selected>Select  Employee To do </option>
+                    <option value="Team Leader">Ali</option>
+                    <option value="Developer">Ahmad</option>
+
+                </select>
+                <div class="form-group">
+                    <label for="email">Task Time </label>
+                    <input type="text" class="form-control" placeholder="Enter time to do in h" id="time">
+                </div>
+                <div class="form-group" style="margin-top: 30px">
+                    <button type="submit" class="btn btn-primary">add</button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
 
 </c:if>
 

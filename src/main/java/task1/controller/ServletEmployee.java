@@ -8,6 +8,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 @WebServlet(name = "ServletEmployee", value = "/ServletEmployee")
@@ -31,8 +32,6 @@ public class ServletEmployee extends HttpServlet {
             String type;
             String id;
 
-
-            //  email,  username,  imgURL,  type
             while (resultSet.next()){
                 email=resultSet.getString("email");
                 username=resultSet.getString("first_name")+" "+resultSet.getString("last_name");
@@ -50,6 +49,34 @@ public class ServletEmployee extends HttpServlet {
         requestDispatcher.forward(request,response);
 
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String img="jkhfb";
+
+        DatabaseDriver.db_executor("INSERT INTO Employees1 (email, Id, img_url, password, role, username) VALUES ('"+req.getParameter("email")+"',"+null+", '"+img+"', '11223344', 'developer','"+req.getParameter("username")+"')",true);
+        ResultSet resultSet=DatabaseDriver.db_executor("SELECT LAST_INSERT_ID();",false);
+
+
+       if(resultSet!=null){
+           try {
+               System.out.println(resultSet.getRow());
+           } catch (SQLException sqlException) {
+               sqlException.printStackTrace();
+           }
+       }
+
+
+
+        RequestDispatcher requestDispatcher=req.getRequestDispatcher("index.jsp");
+        requestDispatcher.forward(req,resp);
+
+        super.doPost(req, resp);
+    }
+
+
+
 
 
 }

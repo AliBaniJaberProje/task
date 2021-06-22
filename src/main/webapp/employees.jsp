@@ -33,32 +33,26 @@
 %>
 
 <c:if test="${isAuthorized==null}">
-    <myHeader:headerTag auth="false"  />
+    <myHeader:headerTag auth="false" typeuser="teamLeader" />
 </c:if>
 
 <c:if test="${isAuthorized!=null}">
-    <myHeader:headerTag auth="true"  />
+    <myHeader:headerTag auth="true"  typeuser="teamLeader" />
 </c:if>
 
 
 <div class="container-fluid">
     <div class="row">
         <c:forEach items="${employees}" var="item">
-
             <div class="card" style="width:200px; margin-left: 20px ; margin-top: 20px">
                 <img class="card-img-top  "style="height: 150px" src="${item.getImgURL()}" alt="Card image">
                 <div class="card-body">
                     <h4 class="card-title">${item.getUsername()}</h4>
                     <p class="card-text">${item.getType()}</p>
-
-
                 </div>
             </div>
         </c:forEach>
-
     </div>
-
-
 </div>
 
 
