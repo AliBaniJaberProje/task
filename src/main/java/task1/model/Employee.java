@@ -6,8 +6,7 @@ public class Employee {
    private String username;
    private String imgURL;
    private String type;
-    private  String id ;
-
+   private  String id ;
 
     public Employee(String email, String username, String imgURL, String type, String id) {
         this.email = email;
@@ -56,4 +55,5 @@ public class Employee {
     public void setId(String id) {
         this.id = id;
     }
+
 }

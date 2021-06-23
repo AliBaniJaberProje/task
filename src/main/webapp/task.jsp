@@ -1,4 +1,7 @@
-<%--
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="task1.database.DatabaseDriver" %>
+<%@ page import="task1.model.Task" %>
+<%@ page import="java.util.ArrayList" %><%--
   Created by IntelliJ IDEA.
   User: ali_jaber
   Date: 6/21/21
@@ -34,6 +37,9 @@
     String isAuthorized=(String) session.getAttribute("authorized");
     pageContext.setAttribute("isAuthorized",isAuthorized);
     pageContext.setAttribute("typeUser","manager");
+
+
+
 %>
 
 <c:if test="${isAuthorized==null}">
@@ -44,70 +50,70 @@
     <myHeader:headerTag auth="true" typeuser="teamLeader" />
 </c:if>
 
+<%
+    ResultSet resultSet= DatabaseDriver.db_executor("SELECT * FROM `Task_` WHERE employee_to_do='"+session.getAttribute("idUser")+"'",false);
+    ArrayList<Task> tasks =new ArrayList<Task>();
+    if(resultSet!=null){
+        while (resultSet.next()){
+            //String id, String taskNmae, String createBy, int time, String employee_to_do, String status
+            tasks.add(new Task(resultSet.getString("task_id"),resultSet.getString("task_name"),resultSet.getString("created_by"),resultSet.getInt("time_amount"),resultSet.getString("employee_to_do"),resultSet.getString("status") ));
+        }
+    }
+    pageContext.setAttribute("tasks",tasks);
+
+
+%>
+
+<%!
+    public void print_a(){
+        System.out.println("rrrrrrrrrrrrrrrrrrrrrrrrrr");
+    }
+
+%>
 
 
 <div class="container">
-    <h2>Contextual Classes</h2>
-    <p>Contextual classes can be used to color the table, table rows or table cells. The classes that can be used are: .table-primary, .table-success, .table-info, .table-warning, .table-danger, .table-active, .table-secondary, .table-light and .table-dark:</p>
+    <h2>Tasks Table</h2>
     <table class="table">
         <thead>
         <tr>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Email</th>
+            <th>task id</th>
+            <th>task name</th>
+            <th>created by </th>
+            <th>time </th>
+            <th>status</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>Default</td>
-            <td>Defaultson</td>
-            <td>def@somemail.com</td>
-        </tr>
-        <tr class="table-primary">
-            <td>Primary</td>
-            <td>Joe</td>
-            <td>joe@example.com</td>
-        </tr>
-        <tr class="table-success">
-            <td>Success</td>
-            <td>Doe</td>
-            <td>john@example.com</td>
-        </tr>
-        <tr class="table-danger">
-            <td>Danger</td>
-            <td>Moe</td>
-            <td>mary@example.com</td>
-        </tr>
-        <tr class="table-info">
-            <td>Info</td>
-            <td>Dooley</td>
-            <td>july@example.com</td>
-        </tr>
-        <tr class="table-warning">
-            <td>Warning</td>
-            <td>Refs</td>
-            <td>bo@example.com</td>
-        </tr>
-        <tr class="table-active">
-            <td>Active</td>
-            <td>Activeson</td>
-            <td>act@example.com</td>
-        </tr>
-        <tr class="table-secondary">
-            <td>Secondary</td>
-            <td>Secondson</td>
-            <td>sec@example.com</td>
-        </tr>
-        <tr class="table-light">
-            <td>Light</td>
-            <td>Angie</td>
-            <td>angie@example.com</td>
-        </tr>
-        <tr class="table-dark text-dark">
-            <td>Dark</td>
-            <td>Bo</td>
-            <td>bo@example.com</td>
-        </tr>
+        <c:forEach items="${tasks}" var="task">
+            <tr>
+                <td>${task.id}</td>
+                <td>${task.taskNmae}</td>
+                <td>${task.createBy}</td>
+                <td>${task.time}</td>
+
+                <td>
+                    <div class="row">
+                        <div class="col-sm"><form action="ServletTaskServlet" method="PUT">
+                            <select name="status" class="custom-select" onclick="<%print_a();%>"  >
+                                <option value="Done+${task.id}" >Done</option>
+                                <option value="Completed+${task.id}" >Completed</option>
+                                <option value="In Progress+${task.id}" >In Progress</option>
+                            </select>
+                            <div class="col-sm">
+                                <button type="button" class="btn btn-success"  value="حفظ"></button>
+                            </div>
+
+                        </form></div>
+
+
+
+                    </div>
+
+                </td>
+            </tr>
+        </c:forEach>
+
         </tbody>
     </table>
 </div>

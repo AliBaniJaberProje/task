@@ -27,8 +27,11 @@ public class ServletLoginServlet extends HttpServlet {
             try {
                 while (resultSet.next()){
                     String type=resultSet.getString("role");
-                    if(type.equals("manager"))
+                    if(type.equals("manager")){
                         session.setAttribute("type",type);
+                        session.setAttribute("idUser",resultSet.getString("Id"));
+                    }
+
 
                 }
                 System.out.println(session.getAttribute("type"));

@@ -17,6 +17,7 @@
 <html>
 <head>
 
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -71,9 +72,7 @@
 
     if(resultSet!=null){
         while (resultSet.next()){
-
             employees.add(new Employee(resultSet.getString("email"), resultSet.getString("username"), "","",resultSet.getString("Id")));
-
         }
     }
     for (int i=0;i<employees.toArray().length;i++){
@@ -81,6 +80,18 @@
     }
 
     pageContext.setAttribute("employees",employees);
+
+    ResultSet resultSet1= DatabaseDriver.db_executor("SELECT * FROM Employees1",false);
+    ArrayList<Employee>  todoTaskEmployee=new ArrayList<Employee>();
+    if(resultSet1!=null){
+        while (resultSet1.next()){
+            todoTaskEmployee.add(new Employee(resultSet1.getString("email"), resultSet1.getString("username"), "","",resultSet1.getString("Id")));
+        }
+    }
+    pageContext.setAttribute("todoTaskEmployee",todoTaskEmployee);
+
+
+
 
 %>
     <div class="row">
@@ -114,19 +125,22 @@
             <form action="ServletTaskServlet" method="POST">
                 <div class="form-group">
                     <label for="taskName">Task Name </label>
-                    <input type="text" class="form-control" placeholder="Enter email" id="taskName">
+                    <input type="text" class="form-control" placeholder="Enter email" id="taskName" name="taskname">
                 </div>
                 <label for="email">Employee Name </label>
                 <select name="employee" class="custom-select">
 
                     <option selected>Select  Employee To do </option>
-                    <option value="Team Leader">Ali</option>
-                    <option value="Developer">Ahmad</option>
+                    <c:forEach items="${todoTaskEmployee}" var="item" >
+                        <option value="${item.id}">${item.username}</option>
+
+                    </c:forEach>
+
 
                 </select>
                 <div class="form-group">
                     <label for="email">Task Time </label>
-                    <input type="text" class="form-control" placeholder="Enter time to do in h" id="time">
+                    <input type="text" class="form-control" placeholder="Enter time to do in h" id="time" name="time">
                 </div>
                 <div class="form-group" style="margin-top: 30px">
                     <button type="submit" class="btn btn-primary">add</button>
