@@ -84,29 +84,26 @@
             <th>status</th>
         </tr>
         </thead>
+
+        <form action="ServletTaskServlet" method="get">
+
         <tbody>
+
         <c:forEach items="${tasks}" var="task">
-            <tr>
+        <div class="col-sm">
+                <tr>
                 <td>${task.id}</td>
                 <td>${task.taskNmae}</td>
                 <td>${task.createBy}</td>
                 <td>${task.time}</td>
 
                 <td>
-                    <div class="row">
-                        <div class="col-sm"><form action="ServletTaskServlet" method="PUT">
-                            <select name="status" class="custom-select" onclick="<%print_a();%>"  >
-                                <option value="Done+${task.id}" >Done</option>
-                                <option value="Completed+${task.id}" >Completed</option>
-                                <option value="In Progress+${task.id}" >In Progress</option>
-                            </select>
-                            <div class="col-sm">
-                                <button type="button" class="btn btn-success"  value="حفظ"></button>
-                            </div>
 
-                        </form></div>
-
-
+                    <select name="status" class="custom-select" onclick=" print_a"  >
+                    <option value="Done+${task.id}" >Done</option>
+                    <option value="Completed+${task.id}" >Completed</option>
+                    <option value="In Progress+${task.id}" >In Progress</option>
+                    </select>
 
                     </div>
 
@@ -114,7 +111,10 @@
             </tr>
         </c:forEach>
 
+
         </tbody>
+        <input type="submit" value="حفظ" >
+        </form>
     </table>
 </div>
 </body>
