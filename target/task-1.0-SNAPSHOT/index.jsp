@@ -94,63 +94,65 @@
 
 
 %>
-    <div class="row">
-        <div class="col" style="margin-left: 40px">
+    <c:if test="${type!=null}">
+        <div class="row">
+            <div class="col" style="margin-left: 40px">
 
-            <form action="ServletEmployee" method="POST">
-                <div class="form-group">
-                    <label for="email">Employee Email </label>
-                    <input type="text" class="form-control" placeholder="Enter email" id="email" name="email">
-                </div>
-                <div class="form-group">
-                    <label for="username">username:</label>
-                    <input type="text" class="form-control" placeholder="Enter username" id="username" name="username">
-                </div>
-                <label for="email">Employee Type </label>
-                <select name="manager" class="custom-select">
+                <form action="ServletEmployee" method="POST">
+                    <div class="form-group">
+                        <label for="email">Employee Email </label>
+                        <input type="text" class="form-control" placeholder="Enter email" id="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="username">username:</label>
+                        <input type="text" class="form-control" placeholder="Enter username" id="username" name="username">
+                    </div>
+                    <label for="email">Employee Type </label>
+                    <select name="manager" class="custom-select">
 
 
-                    <c:forEach items="${employees}" var="employe">
-                        <option value="${employe.getId()}" >${employe.getUsername()}</option>
-                    </c:forEach>
+                        <c:forEach items="${employees}" var="employe">
+                            <option value="${employe.getId()}" >${employe.getUsername()}</option>
+                        </c:forEach>
 
-                </select>
-                <div class="form-group" style="margin-top: 30px">
-                    <button type="submit" name="submit" class="btn btn-primary">add</button>
-                </div>
+                    </select>
+                    <div class="form-group" style="margin-top: 30px">
+                        <button type="submit" name="submit" class="btn btn-primary">add</button>
+                    </div>
 
-            </form>
+                </form>
+            </div>
+            <div class="col">
+                <form action="ServletTaskServlet" method="POST">
+                    <div class="form-group">
+                        <label for="taskName">Task Name </label>
+                        <input type="text" class="form-control" placeholder="Enter task name" id="taskName" name="taskname">
+                    </div>
+                    <label for="email">Employee Name </label>
+                    <select name="employee" class="custom-select">
+
+                        <option selected>Select  Employee To do </option>
+                        <c:forEach items="${todoTaskEmployee}" var="item" >
+                            <option value="${item.id}">${item.username}</option>
+
+                        </c:forEach>
+
+
+                    </select>
+                    <div class="form-group">
+                        <label for="email">Task Time </label>
+                        <input type="text" class="form-control" placeholder="Enter time to do in h" id="time" name="time">
+                    </div>
+                    <div class="form-group" style="margin-top: 30px">
+                        <button type="submit" class="btn btn-primary">add</button>
+                    </div>
+
+                </form>
+
+            </div>
+
         </div>
-        <div class="col">
-            <form action="ServletTaskServlet" method="POST">
-                <div class="form-group">
-                    <label for="taskName">Task Name </label>
-                    <input type="text" class="form-control" placeholder="Enter email" id="taskName" name="taskname">
-                </div>
-                <label for="email">Employee Name </label>
-                <select name="employee" class="custom-select">
-
-                    <option selected>Select  Employee To do </option>
-                    <c:forEach items="${todoTaskEmployee}" var="item" >
-                        <option value="${item.id}">${item.username}</option>
-
-                    </c:forEach>
-
-
-                </select>
-                <div class="form-group">
-                    <label for="email">Task Time </label>
-                    <input type="text" class="form-control" placeholder="Enter time to do in h" id="time" name="time">
-                </div>
-                <div class="form-group" style="margin-top: 30px">
-                    <button type="submit" class="btn btn-primary">add</button>
-                </div>
-
-            </form>
-
-        </div>
-
-    </div>
+    </c:if>
 
 </c:if>
 
