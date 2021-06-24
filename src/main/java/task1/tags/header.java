@@ -40,7 +40,7 @@ public class header extends SimpleTagSupport {
         if (typeuser =="teamLeader" && auth=="true")
             out.print(
                     "        <li class=\"nav-item\">\n" +
-                            "            <a class=\"nav-link\" href=\"ServletEmployee\" style=\"font-size: 25px;margin: 30px\">Team</a>\n" +
+                            "            <a class=\"nav-link\" href=\"ServletEmployee\" style=\"font-size: 25px;margin: 30px\">Employee</a>\n" +
                             "        </li>\n");
 
 

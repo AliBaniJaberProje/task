@@ -42,6 +42,13 @@
 
 %>
 
+<script>
+    function  printxx(){
+        document.getElementById("formStatus").submit()
+
+    }
+</script>
+
 <c:if test="${isAuthorized==null}">
     <myHeader:headerTag auth="false" typeuser="manager" />
 </c:if>
@@ -51,12 +58,12 @@
 </c:if>
 
 <%
-    ResultSet resultSet= DatabaseDriver.db_executor("SELECT * FROM `Task_` WHERE employee_to_do='"+session.getAttribute("idUser")+"'",false);
+    ResultSet resultSet= DatabaseDriver.db_executor("SELECT Task_.* ,Employees1.username FROM `Task_` INNER JOIN Employees1 ON Task_.created_by=Employees1.Id"+" WHERE Task_.employee_to_do='"+session.getAttribute("idUser")+"'",false);
     ArrayList<Task> tasks =new ArrayList<Task>();
     if(resultSet!=null){
         while (resultSet.next()){
             //String id, String taskNmae, String createBy, int time, String employee_to_do, String status
-            tasks.add(new Task(resultSet.getString("task_id"),resultSet.getString("task_name"),resultSet.getString("created_by"),resultSet.getInt("time_amount"),resultSet.getString("employee_to_do"),resultSet.getString("status") ));
+            tasks.add(new Task(resultSet.getString("task_id"),resultSet.getString("task_name"),resultSet.getString("username"),resultSet.getInt("time_amount"),resultSet.getString("employee_to_do"),resultSet.getString("status") ));
         }
     }
     pageContext.setAttribute("tasks",tasks);
@@ -64,16 +71,13 @@
 
 %>
 
-<%!
-    public void print_a(){
-        System.out.println("rrrrrrrrrrrrrrrrrrrrrrrrrr");
-    }
 
-%>
 
 
 <div class="container">
     <h2>Tasks Table</h2>
+
+
     <table class="table">
         <thead>
         <tr>
@@ -85,11 +89,13 @@
         </tr>
         </thead>
 
-        <form action="ServletTaskServlet" method="get">
+
 
         <tbody>
 
         <c:forEach items="${tasks}" var="task">
+
+        <form action="ServletTaskServlet" id="formStatus" method="get">
         <div class="col-sm">
                 <tr>
                 <td>${task.id}</td>
@@ -98,24 +104,28 @@
                 <td>${task.time}</td>
 
                 <td>
-
-                    <select name="status" class="custom-select" onclick=" print_a"  >
-                    <option value="Done+${task.id}" >Done</option>
-                    <option value="Completed+${task.id}" >Completed</option>
-                    <option value="In Progress+${task.id}" >In Progress</option>
+                    <select  id="${task.id}" name="status"  class="custom-select"  onchange="printxx()" >
+                          <option value="Done,${task.id}" ${task.status=="Done"?"selected":""} >Done</option>
+                          <option value="Completed,${task.id}" ${task.status=="Completed"?"selected":""}>Completed</option>
+                          <option value="In Progress,${task.id}" ${task.status=="In Progress"?"selected":""}>In Progress</option>
                     </select>
-
-                    </div>
-
                 </td>
+
             </tr>
+
+        </div>
+        </form>
         </c:forEach>
 
 
         </tbody>
-        <input type="submit" value="حفظ" >
-        </form>
+
+
     </table>
+
+
+
+
 </div>
 </body>
 </html>

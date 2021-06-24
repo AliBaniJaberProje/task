@@ -1,4 +1,6 @@
-<%--
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="java.sql.DriverManager" %>
+<%@ page import="task1.database.DatabaseDriver" %><%--
   Created by IntelliJ IDEA.
   User: ali_jaber
   Date: 6/21/21
@@ -30,7 +32,34 @@
 <%
     String isAuthorized=(String) session.getAttribute("authorized");
     pageContext.setAttribute("isAuthorized",isAuthorized);
-    pageContext.setAttribute("typeUser","manager");
+   String idUser=(String) session.getAttribute("idUser");
+    ResultSet resultSet= DatabaseDriver.db_executor("select * from Employees1 where Id='"+idUser+"'",false);
+    String username=null;
+    String type=null;
+    String number_of_tasks=null;
+    String img=null;
+
+
+    while (resultSet.next()){
+            username=resultSet.getString("username");
+            type=resultSet.getString("role");
+            img=resultSet.getString("img_url");
+    }
+
+    ResultSet resultSet1=DatabaseDriver.db_executor("SELECT COUNT(task_id) FROM Task_ where employee_to_do='"+session.getAttribute("idUser")+"' and status='Completed' ",false);
+
+    while (resultSet1.next()){
+        number_of_tasks=resultSet1.getString("COUNT(task_id)");
+    }
+
+
+    pageContext.setAttribute("username",username);
+    pageContext.setAttribute("type",type);
+    pageContext.setAttribute("img",img);
+    pageContext.setAttribute("number_of_tasks",number_of_tasks);
+
+
+
 %>
 
 <c:if test="${isAuthorized==null}">
@@ -43,24 +72,21 @@
 
 <div class="container" style="margin-top: 30px; margin-bottom: 30px">
 
-    <img src="https://scontent.fjrs13-1.fna.fbcdn.net/v/t1.6435-9/197525704_1807822596061647_6230598223234021645_n.jpg?_nc_cat=103&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=RSLl_bkE_RYAX8TN8eU&_nc_ht=scontent.fjrs13-1.fna&oh=34c797654d355ed36b8b7e0e3384f21d&oe=60D59D61" class="rounded-circle" alt="Cinque Terre" width="200" height="200">
-<%--    <form action="ServletProfile" method="post" enctype="multipart/form-data">--%>
-<%--        <input type="file" name="file" value="choose image" />--%>
-<%--        <input type="submit" value="save" />--%>
-<%--    </form>--%>
+    <img src="${img}" class="rounded-circle" alt="Cinque Terre" width="200" height="200">
+
 </div>
 <div class="card-columns">
 
 
     <div class="card bg-light">
         <div class="card-body text-center">
-            <p class="card-text">Ali Bani jABER </p>
+            <p class="card-text">${username} </p>
         </div>
     </div>
 
     <div class="card bg-light">
         <div class="card-body text-center">
-            <p class="card-text">Developer</p>
+            <p class="card-text">${type}</p>
         </div>
     </div>
 
@@ -73,7 +99,7 @@
 
     <div class="card bg-light">
         <div class="card-body text-center">
-            <p class="card-text">90 task </p>
+            <p class="card-text">${number_of_tasks} task </p>
         </div>
     </div>
 

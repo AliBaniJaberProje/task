@@ -45,7 +45,7 @@
     <div class="row">
         <c:forEach items="${employees}" var="item">
             <div class="card" style="width:200px; margin-left: 20px ; margin-top: 20px">
-                <img class="card-img-top  "style="height: 150px" src="${item.getImgURL()}" alt="Card image">
+                <img class="card-img-top  "style="height: 150px" src="assets/images/Arh-avatar.jpg" alt="Card image">
                 <div class="card-body">
                     <h4 class="card-title">${item.getUsername()}</h4>
                     <p class="card-text">${item.getType()}</p>

@@ -21,11 +21,12 @@ public class ServletLoginServlet extends HttpServlet {
         String pswd=request.getParameter("pswd");
         String SQL ="SELECT * FROM `Employees1` WHERE email='"+email+"' and password='"+pswd+"'";
 
-        ResultSet resultSet= DatabaseDriver.db_executor("SELECT * FROM `Employees1` WHERE email='alijaber@gmail.com'and password='11223344'",false);
+        ResultSet resultSet= DatabaseDriver.db_executor(SQL,false);
         if (resultSet!=null){
-            session.setAttribute("authorized","true");
+
             try {
                 while (resultSet.next()){
+                    session.setAttribute("authorized","true");
                     String type=resultSet.getString("role");
                     if(type.equals("manager")){
                         session.setAttribute("type",type);

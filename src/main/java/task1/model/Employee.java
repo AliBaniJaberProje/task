@@ -14,6 +14,7 @@ public class Employee {
         this.imgURL = imgURL;
         this.type = type;
         this.id = id;
+
     }
 
     public String getEmail() {

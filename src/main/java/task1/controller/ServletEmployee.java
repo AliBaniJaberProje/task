@@ -15,12 +15,11 @@ import java.util.ArrayList;
 public class ServletEmployee extends HttpServlet {
 
 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         RequestDispatcher requestDispatcher=request.getRequestDispatcher("employees.jsp");
-       String SQL= "SELECT Employees.*,role.* FROM `Employees` INNER JOIN role ON Employees.role=role.role_id ORDER BY Employees.first_name";
+       String SQL= "SELECT * FROM `Employees1` ";
         ResultSet resultSet= DatabaseDriver.db_executor(SQL,false);
 
         ArrayList<Employee> employees=new ArrayList<Employee>();
@@ -34,10 +33,10 @@ public class ServletEmployee extends HttpServlet {
 
             while (resultSet.next()){
                 email=resultSet.getString("email");
-                username=resultSet.getString("first_name")+" "+resultSet.getString("last_name");
+                username=resultSet.getString("username");
                 imgURL=resultSet.getString("img_url");
-                type=resultSet.getString("role_name");
-                id=resultSet.getString("id");
+                type=resultSet.getString("role");
+                id=resultSet.getString("Id");
                 employees.add(new Employee(email,username,imgURL,type,id));
             }
             request.setAttribute("employees",employees);
@@ -53,20 +52,25 @@ public class ServletEmployee extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String img="jkhfb";
+        HttpSession session = req.getSession();
+
+        String img="assets/images/Arh-avatar.jpg";
 
         DatabaseDriver.db_executor("INSERT INTO Employees1 (email, Id, img_url, password, role, username) VALUES ('"+req.getParameter("email")+"',"+null+", '"+img+"', '11223344', 'developer','"+req.getParameter("username")+"')",true);
-        ResultSet resultSet=DatabaseDriver.db_executor("SELECT LAST_INSERT_ID();",false);
+        ResultSet resultSet=DatabaseDriver.db_executor("SELECT Id FROM `Employees1` ORDER BY Id DESC LIMIT 1",false);
+        String idemployee = null;
 
 
        if(resultSet!=null){
            try {
-               System.out.println(resultSet.getRow());
+               while (resultSet.next()) {
+                   idemployee = resultSet.getString("Id");
+               }
            } catch (SQLException sqlException) {
                sqlException.printStackTrace();
            }
        }
-
+       DatabaseDriver.db_executor("INSERT INTO Managment_relation (id, id_developer, id_manager) VALUES ("+null+",'"+idemployee+"','"+session.getAttribute("idUser")+"')",true);
 
 
         RequestDispatcher requestDispatcher=req.getRequestDispatcher("index.jsp");
@@ -74,9 +78,6 @@ public class ServletEmployee extends HttpServlet {
 
         super.doPost(req, resp);
     }
-
-
-
 
 
 }
